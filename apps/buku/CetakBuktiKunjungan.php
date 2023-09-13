@@ -46,8 +46,8 @@ date_default_timezone_set('Asia/Jakarta');
 <body>
     <div class="col-lg-4 ">
         <?php
-        if (isset($_GET['pesan'])) {
-            $id    = $_GET['pesan'];
+        if (isset($_GET['kunjungan'])) {
+            $id    = $_GET['kunjungan'];
         } else {
             die("Error. No ID Selected!");
         }

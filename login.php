@@ -27,13 +27,13 @@
         <?php
         require_once "system/config/policy/session-token-expired.php";
 
-        session_start();
+        // session_start();
         // echo $_SESSION['token'];
         if (isset($_SESSION['token'])) {
             echo "<div class='alert alert-success'><i class='fas fa-user pr-2 px-2'><strong> Hallo, $_SESSION[nama]</strong></i><i class='fa fa-sync float-right fa-spin'></i></div>";
 
             echo '<script>setTimeout(function () {
-                window . location . href = "pages/controllers/index/hal?i=pages1";
+                window . location . href = "pages/controllers/index/hal.php?i=pages1";
             }, 2000); </script>';
         } else {
             echo "<div id='alert' name='alert' class='alert alert-success'><strong>Selamat Datang, Silahkan Login..!!</strong></div>";
@@ -43,7 +43,7 @@
             <div class="card-body login-card-body">
                 <p class="login-box-msg">SILAHKAN LOGIN DULU</p>
 
-                <form action="system/sys-login/cek-login?" method="post">
+                <form action="system/sys-login/cek-login.php?" method="post">
                     <div class="input-group mb-3">
                         <input type="text" name="npp" class="form-control" placeholder="NPP / Username">
                         <div class="input-group-append">

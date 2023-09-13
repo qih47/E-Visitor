@@ -41,17 +41,17 @@ if ($user) {
 			$_SESSION['level'] = $user['level'];
 			$_SESSION['pesan'] = "loginback";
 			// alihkan ke halaman dashboard admin
-			header("location:../../login?hal=main");
+			header("location:../../?hal=login&pesan=sukses");
 		} else {
-			header("location:../../login?hal=main&pesan=gagal");
+			header("location:../../?hal=login&pesan=gagal");
 			exit;
 		}
 	} else {
-		header("location:../../login?hal=main&pesan=salah");
+		header("location:../../?hal=login&pesan=salah");
 		exit;
 	}
 } else {
-	header("location:../../login?hal=main&pesan=nouser");
+	header("location:../../?hal=login&pesan=nouser");
 	exit;
 }
 

@@ -31,36 +31,65 @@ $(document).ready(function () {
 // Jam Sidebar
 function showTime() {
   var date = new Date();
-  var h = date.getHours(); // 0 - 23
-  var m = date.getMinutes(); // 0 - 59
-  var s = date.getSeconds(); // 0 - 59
-  text = " WIB";
+  var h = date.getHours();
+  var m = date.getMinutes();
+  var s = date.getSeconds();
+  var day = date.getDate();
+  var month = date.getMonth();
+  var year = date.getFullYear();
+  var daysOfWeek = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+  ];
+  var monthsOfYear = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  // Format waktu
+  var text = " WIB";
   if (m < 10) {
-    mnol = 0;
+    mnol = "0";
   } else {
     mnol = "";
   }
   if (s < 10) {
-    snol = 0;
+    snol = "0";
   } else {
     snol = "";
   }
 
-  if (h < 9) {
-    waktu = "PAGI HARI";
-  } else if (h >= 9 && h < 15) {
-    waktu = "SIANG HARI";
-  } else if (h >= 15 && h < 18) {
-    waktu = "SORE HARI";
-  } else {
-    waktu = "MALAM HARI";
-  }
-
   var time = h + ":" + mnol + m + ":" + snol + s + text;
+
+  // Format tanggal dan waktu
+  var tanggal =
+    daysOfWeek[date.getDay()] +
+    ", " +
+    day +
+    " " +
+    monthsOfYear[month] +
+    " " +
+    year;
+
   document.getElementById("MyClockDisplay").innerText = time;
   document.getElementById("MyClockDisplay").textContent = time;
-  document.getElementById("waktu").innerText = waktu;
-  document.getElementById("waktu").textContent = waktu;
+  document.getElementById("tanggal").innerText = tanggal;
+  document.getElementById("tanggal").textContent = tanggal;
 
   setTimeout(showTime, 1000);
 }
@@ -82,7 +111,7 @@ $("#logout").on("click", function () {
     })
     .then((result) => {
       if (result.value === true) {
-        window.location = "logout";
+        window.location = "?hal=logout";
       } else {
         swal.fire({
           text: "Anda tidak jadi keluar halaman, silahkan lanjutkan tugas!",
@@ -101,7 +130,7 @@ $(document).ready(function () {
     serverSide: true,
     sPaginationType: "full_numbers",
     ajax: {
-      url: "system/controllers/showBuku",
+      url: "system/controllers/showBuku.php",
     },
     dataSrc: "",
     order: [],
@@ -292,53 +321,70 @@ $(document).ready(function () {
   });
 });
 
-$(document).ready((function () {
-    var tableDivisi = $("#divisiTable").DataTable({
-      processing: true,
-      serverSide: true,
-      sPaginationType: "full_numbers",
-      ajax: {
-        url: "system/controllers/showDivisi",
-      },
-      dataSrc: "",
-      order: [],
-      fnCreatedRow: function (row, data, index) {
-        $("td", row)
-          .eq(0)
-          .html(index + 1);
-      },
+$(document).ready(function () {
+  var tableDivisi = $("#divisiTable").DataTable({
+    processing: true,
+    serverSide: true,
+    sPaginationType: "full_numbers",
+    ajax: {
+      url: "system/controllers/showDivisi.php",
+    },
+    dataSrc: "",
+    order: [],
+    fnCreatedRow: function (row, data, index) {
+      $("td", row)
+        .eq(0)
+        .html(index + 1);
+    },
 
-      columnDefs: [
-        {
-          targets: 0,
-          render: function (data, type, row, meta) {
-            var pageInfo = tableDivisi.page.info();
-            return meta.row + 1;
-          },
+    columnDefs: [
+      {
+        targets: 0,
+        render: function (data, type, row, meta) {
+          var pageInfo = tableDivisi.page.info();
+          return meta.row + 1;
         },
-        {
-          targets: [5],
-          data: null,
-          render: function (data, dt, ids, type, row) {
-            var indexID = data[0];
-            var indexNama = data[1];
-            var indexKode = data[2];
-            var btn =
-              '<center></a> <a href="pages/controllers/index/hal?i=pages13&pesan=' +
-              data[2] +
-              '"class="btn btn-success btn-xs"><i class="fas fa-edit"></i></a> <a onclick="confirmDeleteValidasi(\'' +
-              indexID +
-              "', '" +
-              indexNama +
-              "', '" +
-              indexKode +
-              '\')" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a></center>';
-            return btn;
-          },
+      },
+      {
+        targets: [5],
+        data: null,
+        render: function (data, dt, ids, type, row) {
+          var indexID = data[0];
+          var indexNama = data[1];
+          var indexKode = data[2];
+          var btn =
+            '<center></a> <a href="pages/controllers/index/hal.php?i=pages13&pesan=' +
+            data[2] +
+            '"class="btn btn-success btn-xs"><i class="fas fa-edit"></i></a> <a onclick="confirmDeleteValidasi(\'' +
+            indexID +
+            "', '" +
+            indexNama +
+            "', '" +
+            indexKode +
+            '\')" class="btn btn-danger btn-xs"><i class="fas fa-trash"></i></a></center>';
+          return btn;
         },
-      ],
-    });
-}))
+      },
+      {
+        targets: [4],
+        data: null,
+        render: function (data) {
+          var indexArea = data[4];
+          if (indexArea === "Terlarang") {
+            colorbg = "green";
+          } else if (indexArea === "Terbatas") {
+            colorbg = "yellow";
+          } else {
+            colorbg = "red";
+          }
+          var Label = `<center><a style='border-radius: 10px;background-color : ${colorbg};color:black;font-weight : bold;padding : 5px;font-size:12px;'>${indexArea}</a></center>`;
+          var Label_status = `<center><a>${Label}</a></center>`;
+          return Label_status;
+        },
+      },
+    ],
+  });
+});
 
 function refreshDataTable() {
   $("#tableVisitor").DataTable().ajax.reload(null, false);
@@ -358,7 +404,7 @@ function confirmSelesaiKunjungan(id, instansi) {
     .then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "system/controllers/updateData",
+          url: "system/controllers/updateData.php",
           method: "POST",
           data: {
             id: id,
@@ -378,13 +424,13 @@ function confirmSelesaiKunjungan(id, instansi) {
             console.log(error);
             Swal.fire(
               "Error",
-              "Terjadi kesalahan saat menghapus data.",
+              "Terjadi kesalahan saat menyelesaikan data kunjungan.",
               "error"
             );
           },
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire("Dibatalkan", "Operasi penghapusan dibatalkan.", "info");
+        Swal.fire("Dibatalkan", "Operasi dibatalkan.", "info");
       }
     })
     .catch((error) => {
@@ -413,7 +459,7 @@ function confirmDeleteRegistrasi(id, instansi) {
     .then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "system/controllers/deleteDataRegistrasi",
+          url: "system/controllers/deleteDataRegistrasi.php",
           method: "POST",
           data: {
             id: id,
@@ -515,6 +561,13 @@ function showDetail(id) {
       modalBody.innerHTML = `
     <div class="row">
       <div class="col-md-6">
+        <a>No. Kunjungan: </a> <a style="${statusStyle}"> ${
+        id || "Menunggu"
+      }</a> 
+      </div>
+      </div><br>
+      <div class="row">
+      <div class="col-md-6">
         <a>Status Kunjungan: </a> <a style="${statusStyle}"> ${
         statusText || "Menunggu"
       } <i class="fas fa-${iconStatus}"></i></a> 
@@ -610,7 +663,7 @@ function showDetail(id) {
         modalFooter.innerHTML = `
   <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-book pr-2"></i> Kunjungan Ulang</button>
   <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fas fa-edit pr-2"></i> Edit Data</button>
-<a href="pages/controllers/index/hal?i=pages5&pesan=${data.id}" target="_blank" class="btn btn-success" value="${data.id}">
+<a href="pages/controllers/index/hal.php?i=pages5&pesan=${data.id}" target="_blank" class="btn btn-success" value="${data.id}">
   <i class="fas fa-print pr-2"></i>Cetak Bukti Kunjungan
 </a>
 `;
@@ -656,7 +709,13 @@ function prosesKunjungan(id) {
       }
       // console.log(penerima,tujuan);
       modalBody.innerHTML = `
+                                <div class="row">
+      <div class="col-md-6">
+        <a id="noKunjungan" name="nameKunjungan"><i class="fas fa-book-open"></i> No. Kunjungan: </a> <a style="font-size:20px"> ${id} </a> 
+      </div>
+      </div><br>
                     <label for="dasarIzin"><u>AKSES PENGUNJUNG</u></label>
+
                           <div class="row">
                             <div class="col-2">
                                 <div class="input-group">
@@ -664,7 +723,7 @@ function prosesKunjungan(id) {
                                         <span style="font-weight:bold;" class="input-group-text">Kartu Akses
                                         </span>
                                     </div>
-                                    <select style="border-color: green;" name="kartu" id="kartu" class="form-control" placeholder="Pilih Divisi">
+                                    <select style="border-color: green;" name="kartuAkses" id="kartuAkses" class="form-control" placeholder="Pilih Akses">
                                         <option> Pilih</option>
 
                                     </select>
@@ -675,7 +734,7 @@ function prosesKunjungan(id) {
                               <div class="input-group-prepend">
                                   <span style="font-weight:bold;" class="input-group-text">Kunci Locker</span>
                               </div>
-                              <select style="border-color: green;" name="kartu" id="kartu" class="form-control" placeholder="Pilih Divisi">
+                              <select style="border-color: green;" name="kunci" id="kunci" class="form-control" placeholder="Pilih Kunsi">
                                   <option value="kosong"> Pilih</option>
                                   ${generateLockerOptions()}
                               </select>
@@ -699,7 +758,7 @@ function prosesKunjungan(id) {
                             <div class="input-group-prepend">
                                 <span style="font-weight:bold;" class="input-group-text">Dasar Izin</span>
                             </div>
-                            <input type="text" name="dasarIzin" id="dasarIzin" style="border-color: red;" class="form-control" readonly value="${
+                            <input type="text" name="dasarIzinTM" id="dasarIzinTM" style="border-color: red;" class="form-control" readonly value="${
                               data.dasar
                             }">
                         </div>
@@ -839,6 +898,41 @@ function prosesKunjungan(id) {
                       </div><br>
 
       `;
+      // get Kartu
+      $("#kartuAkses").empty();
+      var id_divisi = data.id_divisi;
+      var id_direktur = data.id_direktur;
+      $.get(
+        "system/controllers/getKartu.php",
+        {
+          id_divisi: id_divisi,
+          id_direktur: id_direktur,
+        },
+        function (response) {
+          try {
+            var jsonResponse = response;
+            var responseObj = JSON.parse(jsonResponse);
+            var dataValue = responseObj.data;
+            var dataArray = dataValue.split(" ");
+            $.each(dataArray, function (index, value) {
+              $("#kartuAkses").append(
+                $("<option></option>").attr("value", value).text(value)
+              );
+            });
+          } catch (error) {
+            console.log(response);
+            console.error(
+              "JSON ERROR: " + error.message
+            );
+          }
+        }
+      ).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error(
+          "Gagal menampilkan data: " + textStatus,
+          errorThrown
+        );
+      });
+
       // Add more pengunjung
       $(".add-more-visitor").click(function () {
         var html =
@@ -862,6 +956,47 @@ function prosesKunjungan(id) {
       $("#myModal").modal("hide");
       $("#prosesFrmModal").modal("show");
     },
+  });
+}
+
+function simpanFromProsesModal() {
+  const kartuValue = document.getElementById("kartu").value;
+  const jenisIzinValue = document.getElementById("jenisIzin").value;
+  const dasarIzinValue = document.getElementById("dasarIzinTM").value;
+  const tglDasar = document.getElementById("tglDasar").value;
+  const awal = document.getElementById("awal").value;
+  const akhir = document.getElementById("akhir").value;
+  const namaPengunjungElements = document.querySelectorAll(
+    "input[name='addmore[]']"
+  );
+
+  // Membuat array kosong untuk menyimpan nilai-niaila nama pengunjung
+  const namaPengunjung = [];
+
+  // Mengambil nilai dari setiap elemen input yang memiliki nilai (tidak kosong)
+  namaPengunjungElements.forEach(function (element) {
+    if (element.value.trim() !== "") {
+      namaPengunjung.push(element.value);
+    }
+  });
+
+  // Menggabungkan semua nama pengunjung dalam satu string dengan koma sebagai pemisah
+  const namaPengunjungString = namaPengunjung.join(", ");
+
+  // Mendapatkan jumlah pengunjung
+  const jumlahPengunjung = namaPengunjung.length;
+
+  // Sekarang Anda dapat menggunakan nilai-nilai ini sesuai dengan kebutuhan Anda
+  console.log("Nilai Kartu Akses:", kartuValue);
+  console.log("Nilai Jenis Izin:", jenisIzinValue);
+  console.log("Nilai Dasar Izin:", dasarIzinValue);
+  console.log("Nilai Tgl Izin:", tglDasar);
+  console.log("Nilai Awal :", awal);
+  console.log("Nilai Akhir :", akhir);
+  $.ajax({
+    url: "system/controllers/simpanData.php?sesi=prosesRegistrasi",
+    method: "POST",
+    data: {},
   });
 }
 
@@ -1040,7 +1175,7 @@ function PreRegister() {
       tahunSurat;
   }
   $.ajax({
-    url: "system/controllers/simpanData?sesi=preRegister",
+    url: "system/controllers/simpanData.php?sesi=preRegister",
     method: "POST",
     data: {
       dasar: dasar.value,
@@ -1199,6 +1334,6 @@ function deleteRegistrasiOK() {
 $(document).ready(function () {
   $("#tambahDivisi").hide();
   $("#tambahDivisiBtn").on("click", function () {
-      $("#tambahDivisi").toggle();
-  })
-})
+    $("#tambahDivisi").toggle();
+  });
+});

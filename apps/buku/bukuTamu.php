@@ -371,7 +371,8 @@
             </div>
             <div class="modal-footer" id="modal-footer-proses">
                 <button type="button" id="close" name="close" style="border-color: green;" class="btn btn-danger me-1 mb-1 mr-2" data-dismiss="modal">Close<i class="fas fa-door-open ml-3"></i></button>
-                <button type="button" id="simpan" name="simpan" value="simpan" style="border-color: green;" class="btn btn-primary me-1 mb-1 mr-2">Registrasi<i class="fas fa-book ml-3"></i></button>
+                <button type="button" id="simpan" name="simpan" value="simpan" style="border-color: green;" class="btn btn-primary me-1 mb-1 mr-2" onclick="simpanFromProsesModal()">Registrasi<i class="fas fa-book ml-3"></i></button>
+
             </div>
         </div>
     </div>

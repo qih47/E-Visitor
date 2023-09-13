@@ -21,14 +21,14 @@ $idHal = $row['id'];
 if (isset($idHal) == $id) {
     if ($id == 1) {
         $updateStatusPage = $database->updatePageStatus($id, $status);
-        header("location:../../../$path?hal=$halaman$pesan");
+        header("location:../../../?hal=$halaman$pesan");
     } else if ($id == 5) {
         $updateStatusPage = $database->updatePageStatus($id, $status);
-        header("location:../../../cetak?hal=$halaman$pesan");
+        header("location:../../../?hal=cetak&kunjungan=$message");
         $_SESSION['idHal'] = $idHal;
     } else {
         $updateStatusPage = $database->updatePageStatus($id, $status);
-        header("location:../../../main?hal=$halaman$pesan");
+        header("location:../../../main.php?hal=$halaman$pesan");
         $_SESSION['idHal'] = $idHal;
     }
 }

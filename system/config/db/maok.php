@@ -106,14 +106,45 @@ class Database
         return $result;
     }
 
+    public function getKartu($id_div,$id_dir)
+    {
+        $query = $this->pdo->prepare("
+        SELECT kartu.no_kartu, area.id AS area_id, divisi.id_area
+        FROM kartu
+        JOIN area ON area.id = kartu.id_area
+        LEFT JOIN divisi ON divisi.id_area = area.id AND divisi.id = :divisi_id
+        LEFT JOIN direktur ON 
+            (direktur.id_area = area.id AND direktur.id = :direktur_id)
+            OR
+            (direktur.id LIKE 'H-%' AND direktur.id = :direktur_id)
+            OR
+            (direktur.id LIKE '%-H' AND direktur.id = :direktur_id)
+        WHERE (divisi.id IS NOT NULL OR direktur.id IS NOT NULL)
+        GROUP BY kartu.no_kartu
+        ORDER BY CAST(SUBSTRING(kartu.no_kartu, 3) AS UNSIGNED) ASC
+    ");
+
+        $query->bindParam(':divisi_id', $id_div, PDO::PARAM_INT);
+        $query->bindParam(':direktur_id', $id_dir, PDO::PARAM_INT);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+
+
+
+
+
     public function getDataRegistrasi($id)
     {
         $query = $this->pdo->prepare('SELECT 
     registrasi.*, 
-    dasar_izin.*, 
+    dasar_izin.*,
+    divisi.id as id_divisi, 
     divisi.nama_divisi, 
     kartu.no_kartu, 
-    kartu.no_rfid,direktur.nama_dir,direktur.jabatan,
+    kartu.no_rfid,direktur.id as id_direktur,direktur.nama_dir,direktur.jabatan,
     DATEDIFF(dasar_izin.akhirKunjungan, dasar_izin.awalKunjungan) AS selisih_hari,area.id as idArea
 FROM dasar_izin
 LEFT JOIN registrasi ON registrasi.id_dasar = dasar_izin.id

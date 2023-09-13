@@ -3,7 +3,7 @@
        <!-- Brand Logo -->
        <center>
            <div class="nav-item mt-3" id="navitem">
-               <a href="pages/controllers/index/hal?i=pages3" id="brand" class="nav-link px-4 thin-border" style="text-align: center;">
+               <a href="pages/controllers/index/hal.php?i=pages3" id="brand" class="nav-link px-4 thin-border" style="text-align: center;">
                    <img src="assets/img/evisitor.png" alt="E-Visitor Logo" class="brand-image-xl" width="180px" style="opacity: 0.8;right: 20px;text-align:left;" />
                    <span id="brandtittle" class="brand-text font-weight-light mt-3"><b></b></span>
                </a>
@@ -28,13 +28,13 @@
                     with font-awesome or any other icon font library -->
 
                    <li class="nav-item">
-                       <a href="pages/controllers/index/hal?i=pages3" class="nav-link" id="dashboard" data-login-back="<?php echo isset($_SESSION['pesan']) && $_SESSION['pesan'] === "loginback" ? 'true' : 'false'; ?>">
+                       <a href="pages/controllers/index/hal.php?i=pages3" class="nav-link" id="dashboard" data-login-back="<?php echo isset($_SESSION['pesan']) && $_SESSION['pesan'] === "loginback" ? 'true' : 'false'; ?>">
                            <i class="fas fa-tachometer-alt"></i>
                            <p style="margin-left: 9px;">Dashboard</p>
                        </a>
                    </li>
                    <li class="nav-item">
-                       <a href="pages/controllers/index/hal?i=pages4" class="nav-link">
+                       <a href="pages/controllers/index/hal.php?i=pages4" class="nav-link">
                            <i class="fas fa-book-open"></i>
                            <p style="margin-left: 9px;">
                                Buku Tamu
@@ -59,7 +59,7 @@
                        </a>
                        <ul class="nav nav-treeview">
                            <li class="nav-item">
-                               <a href="pages/controllers/index/hal?i=pages6" class="nav-link">
+                               <a href="pages/controllers/index/hal.php?i=pages6" class="nav-link">
                                    <i class="far fa-circle nav-icon"></i>
                                    <p>Pengaturan Divisi</p>
                                </a>
@@ -98,8 +98,8 @@
                                <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2 " style="width: 60px; height: 60px; margin: 10px 0px 0px -13px;">
                                    <i class="fa fa-clock text-primary" style="font-size: 40px;"></i>
                                </div>
-                               <div class="ps-3 px-3" style="margin: 0px -30px 0px 0px;">
-                                   <h5 id="waktu" class="text-white mb-0"></h5>
+                               <div class="ps-3 px-3" style="margin: 0px -30px 0px -7px;">
+                                   <a style="font-size: 14px;" id="tanggal" class="text-white mb-0"></a>
                                    <h5 id="MyClockDisplay" class="text-white mb-0 " data-toggle="counter-up" onload="showTime()"></h5>
                                    <!-- <h5 id="count" name="count" class="text-white mb-0 " data-toggle="counter-up"></h5> -->
                                </div>
@@ -110,7 +110,7 @@
                                <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px; margin: 10px 0px 0px -25px;">
                                    <i class="fa fa-users text-primary" style="font-size: 40px;"></i>
                                </div>
-                               <div class="ps-3" style="margin: 0px -30px 0px 15px;">
+                               <div class="ps-3 px-4" style="margin: 0px -30px 0px 0px;">
                                    <h7 id="count" class="brand-text">TAMU BULAN INI</h7>
                                    <?php
                                     $count = $database->countTamuBulan();
